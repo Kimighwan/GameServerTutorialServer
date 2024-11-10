@@ -27,7 +27,10 @@ namespace GameServer
             packet.WriteLength();
             for (int i = 1; i <= Server.maxPlayer; i++)
             {
-                Server.clients[i].tcp.SendData(packet);
+                if(i != exceptClinet)
+                {
+                    Server.clients[i].tcp.SendData(packet);
+                }
             }
         }
 

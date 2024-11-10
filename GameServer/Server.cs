@@ -53,14 +53,14 @@ namespace GameServer
 
         private static void ServerInit()
         {
-            for (int i = 0; i < maxPlayer; i++)
+            for (int i = 1; i <= maxPlayer; i++)
             {
                 clients.Add(i, new Client(i));
             }
 
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
-                {(int)ClientPackets.welcomeReceived, ServerHandler.WelcomeReceived }
+                {(int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived }
             };
             Console.WriteLine("Init Packet");
         }
