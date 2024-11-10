@@ -9,12 +9,12 @@ namespace GameServer
         static void Main(string[] args)
         {
             Console.Title = "Gmae Server";
+            isRunnig = true;
 
             Thread mainThread = new Thread(new ThreadStart(MainThread));
             mainThread.Start();
 
             Server.Start(20, 26950); // 플레이어 최대 수, 포트 번호
-            Console.ReadKey();
         }
 
         private static void MainThread()
