@@ -9,9 +9,30 @@ namespace GameServer
         private static void SendTCPData(int toClient, Packet packet)
         {
             packet.WriteLength();
-            //Server.clients[toClient].tcp
+            Server.clients[toClient].tcp.SendData(packet);
         }
-        public static void First(int toClient, string m) // 매개변수 => 어떤 클라이언트, 메세지 
+
+
+        private static void SendTCPDataToAll(Packet packet)
+        {
+            packet.WriteLength();
+            for(int i = 1; i <= Server.maxPlayer; i++)
+            {
+                Server.clients[i].tcp.SendData(packet);
+            }
+        }
+
+        private static void SendTCPDataToAll(int exceptClinet, Packet packet)
+        {
+            packet.WriteLength();
+            for (int i = 1; i <= Server.maxPlayer; i++)
+            {
+                Server.clients[i].tcp.SendData(packet);
+            }
+        }
+
+
+        public static void Welcome(int toClient, string m) // 매개변수 => 어떤 클라이언트, 메세지 
         {
             using (Packet packet = new Packet((int)ServerPackets.welcome)) 
             {

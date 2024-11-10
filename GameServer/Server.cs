@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using static GameServer.Server;
 
 namespace GameServer
 {
@@ -11,7 +12,8 @@ namespace GameServer
         public static int maxPlayer {  get; private set; }
         public static int port {  get; private set; }
         public static Dictionary<int, Client> clients = new Dictionary<int, Client>();
-
+        public delegate void PacketHandler(int fromClient, Packet packet);
+        public static Dictionary<int, PacketHandler> packetHandlers;
 
         private static TcpListener tcpListener;
 
@@ -55,6 +57,12 @@ namespace GameServer
             {
                 clients.Add(i, new Client(i));
             }
+
+            packetHandlers = new Dictionary<int, PacketHandler>()
+            {
+                {(int)ClientPackets.welcomeReceived, ServerHandler.WelcomeReceived }
+            };
+            Console.WriteLine("Init Packet");
         }
     }
 }
