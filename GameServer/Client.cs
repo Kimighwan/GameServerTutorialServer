@@ -11,12 +11,14 @@ namespace GameServer
     {
         public int clientId;
         public TCP tcp;
+        public UDP udp;
         public static int bufferSize = 4096;
         
         public Client(int _clientId)
         {
             clientId = _clientId;
             tcp = new TCP(clientId);
+            udp = new UDP(clientId);
         }
 
         public class TCP
@@ -131,6 +133,44 @@ namespace GameServer
                 }
 
                 return false;
+            }
+        }
+
+        public class UDP
+        {
+            public IPEndPoint endPoint;
+
+            private int id;
+
+            public UDP(int _id)
+            {
+                id = _id;
+            }
+
+            public void Connect(IPEndPoint _endPoint)
+            {
+                endPoint = _endPoint;
+                ServerSend.UDPTest(id);
+            }
+
+            public void SendData(Packet packet)
+            {
+                Server.SendUDPData(endPoint, packet);
+            }
+
+            public void HandleData(Packet packet)
+            {
+                int packetLength = packet.ReadInt();
+                byte[] packetBytes = packet.ReadBytes(packetLength);
+
+                ThreadManager.ExecuteOnMainThread(() =>
+                {
+                    using (Packet packet = new Packet(packetBytes))
+                    {
+                        int packetId = packet.ReadInt();
+                        Server.packetHandlers[packetId](id, packet);
+                    }
+                });
             }
         }
     }

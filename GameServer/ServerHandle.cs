@@ -11,11 +11,18 @@ namespace GameServer
             int clientChk = packet.ReadInt();
             string userName = packet.ReadString();
 
-            Console.WriteLine($"{Server.clients[fromClient].tcp.socket.Client.RemoteEndPoint} connected sucessfully {fromClient}");
+            Console.WriteLine($"{Server.clients[fromClient].tcp.socket.Client.RemoteEndPoint} connected sucessfully and is now Player {fromClient}.");
             if (fromClient != clientChk)
             {
                 Console.WriteLine($"Player \"{userName}\" (ID: {fromClient}) has wrong client ID ({clientChk})");
             }
+        }
+
+        public static void UDPTestReceived(int fromClient, Packet packet)
+        {
+            string m = packet.ReadString();
+
+            Console.WriteLine($"Received packet using UDP. Contains message : {m}");
         }
     }
 }
